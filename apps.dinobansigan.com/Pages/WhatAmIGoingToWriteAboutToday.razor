@@ -1,0 +1,30 @@
+﻿@page "/WhatAmIGoingToWriteAboutToday"
+
+<h1>What Am I Going to Write About Today?</h1>
+<p>This is a simple Blazor app that will pick a random topic to write about today.</p>
+<p>Current date: @DateTime.Today.ToShortDateString()</p>
+<p>
+    <button class="btn btn-primary" @onclick="GetTodaysTopic">Get topic for today</button>
+</p>
+<p>@todaysTopic</p>
+
+@code {
+    List<string> writingTopics = new List<string>()
+{
+        "Bookmark Posts",
+        "Game Clips",
+        "Game Log",
+        "Game Screenshots",
+        "Journal Entry",
+        "Music Log"
+    };
+
+    string todaysTopic = string.Empty;
+
+    private void GetTodaysTopic()
+    {
+        Random random = new Random();
+        int index = random.Next(writingTopics.Count);
+        todaysTopic = string.Format("Today's topic is \"{0}\"", writingTopics[index]);
+    }
+}
