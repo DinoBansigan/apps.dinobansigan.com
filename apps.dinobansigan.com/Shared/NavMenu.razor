@@ -1,5 +1,5 @@
 ﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Dino's Blazor Apps</a>
+    <a class="navbar-brand" href="">Dino's Web Apps</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -13,15 +13,15 @@
             </NavLink>
         </li>
         @*<li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>*@
+                <NavLink class="nav-link" href="counter">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Counter
+                </NavLink>
+            </li>*@
         @*<li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>*@
+                <NavLink class="nav-link" href="fetchdata">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+                </NavLink>
+            </li>*@
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="GenerateMongoDbObjectId">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> MongoDb ObjectId
@@ -38,6 +38,16 @@
             </NavLink>
         </li>
     </ul>
+
+    <div id="footer">
+        <p>
+            Copyright © 2020 by Dino Bansigan
+            <br />
+            This work is licensed under a <a style="color: white;" href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a>.
+            <br />
+            This site on <a style="color: white;" href="https://github.com/DinoBansigan/apps.dinobansigan.com">Github</a> | Hosted for free on <a style="color: white;" href="https://www.netlify.com/">Netlify</a>
+        </p>
+    </div>
 </div>
 
 @code {

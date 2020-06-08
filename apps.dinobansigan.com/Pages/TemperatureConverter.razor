@@ -2,7 +2,10 @@
 
 <h1>Temperature Converter</h1>
 <p>
-    A simple temperature converter using C#.
+    A simple temperature converter web app written in C#.
+</p>
+<p>
+    Input Temperature: <input type="text" @bind="@temperature" style="margin-left: 10px; width: 100px;" />
 </p>
 <p>
     <label for="conversionType">Conversion Type: </label>
@@ -12,8 +15,7 @@
     </select>
 </p>
 <p>
-    Input Temperature: <input type="text" @bind="@temperature" style="margin-left: 10px; width: 100px;" />
-    <button class="btn btn-primary" @onclick="ConvertTemperature" style="margin-left: 10px;">Convert</button>
+    <button class="btn btn-primary" @onclick="ConvertTemperature">Convert Temperature</button>
 </p>
 <p>Result: @temperatureResult</p>
 <p style="color: red;">@errorMessage</p>

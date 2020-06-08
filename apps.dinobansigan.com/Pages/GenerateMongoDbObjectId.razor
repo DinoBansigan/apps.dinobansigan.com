@@ -2,10 +2,12 @@
 
 <h1>MongoDB ObjectId Generator</h1>
 <p>A Blazor app that generates a MongoDB ObjectId using MongoDB's official C#/.NET library. </p>
-
 <p>
     <button class="btn btn-primary" @onclick="GetNewMongoDbObjectId">Generate MongoDb ObjectId</button>
-    <input type="text" value="@mongoDbObjectId" style="margin-left: 10px; width: 225px;" />
+</p>
+<p>
+    <label for="mongoDbObjectIdTextbox">ObjectId: </label>
+    <input name="mongoDbObjectIdTextbox" type="text" value="@mongoDbObjectId" style="margin-left: 10px; width: 225px;" />
 </p>
 
 

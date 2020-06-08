@@ -26,6 +26,12 @@ app {
     align-items: center;
 }
 
+#footer {
+    font-size: 10px;
+    color: silver;
+    text-align: center;
+}
+
 .main {
     flex: 1;
 }
@@ -148,6 +154,12 @@ app {
     .main .top-row a, .main .top-row .btn-link {
         margin-left: 0;
     }
+
+    #footer {
+        position: inherit;
+        bottom: inherit;
+        margin-top: 50px;
+    }
 }
 
 @media (min-width: 768px) {
@@ -179,5 +191,11 @@ app {
     .sidebar .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
+    }
+
+    #footer {
+        margin-top: 0px;
+        position: absolute;
+        bottom: 0;
     }
 }
