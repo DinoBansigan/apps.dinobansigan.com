@@ -1,12 +1,16 @@
 ﻿@page "/WhatAmIGoingToWriteAboutToday"
 
-<h1>What Am I Going to Write About Today?</h1>
-<p>This is a simple Blazor app that will pick a random topic to write about today.</p>
-<p>Current date: @DateTime.Today.ToShortDateString()</p>
+<h1>What am I going to write about today?</h1>
+<p>
+    This is a simple Blazor app that will pick a random topic to write about today. The topics are based off 
+    <a href="https://journal.dinobansigan.com/series-and-tags" target="_blank"><em>series</em></a> that I write about on my 
+    <a href="https://journal.dinobansigan.com/" target="_blank">online journal</a>.
+</p>
+<p>Current date: @DateTime.Today.ToLongDateString()</p>
 <p>
     <button class="btn btn-primary" @onclick="GetTodaysTopic">Get topic for today</button>
+    <input type="text" value="@todaysTopic" style="margin-left: 10px; width: 200px;" />
 </p>
-<p>@todaysTopic</p>
 
 @code {
     List<string> writingTopics = new List<string>()
@@ -25,6 +29,7 @@
     {
         Random random = new Random();
         int index = random.Next(writingTopics.Count);
-        todaysTopic = string.Format("Today's topic is \"{0}\"", writingTopics[index]);
+        //todaysTopic = string.Format("Today's topic is \"{0}\"", writingTopics[index]);
+        todaysTopic = writingTopics[index];
     }
 }

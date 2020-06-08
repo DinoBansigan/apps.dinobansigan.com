@@ -1,0 +1,74 @@
+﻿@page "/TemperatureConverter"
+
+<h1>Temperature Converter</h1>
+<p>
+    A simple temperature converter using C#.
+</p>
+<p>
+    <label for="conversionType">Conversion Type: </label>
+    <select @bind="selectedValue" name="conversionType">
+        <option value="Fahrenheit">Fahrenheit to Celsius</option>
+        <option value="Celsius">Celsius to Fahrenheit</option>
+    </select>
+</p>
+<p>
+    Input Temperature: <input type="text" @bind="@temperature" style="margin-left: 10px; width: 100px;" />
+    <button class="btn btn-primary" @onclick="ConvertTemperature" style="margin-left: 10px;">Convert</button>
+</p>
+<p>Result: @temperatureResult</p>
+<p style="color: red;">@errorMessage</p>
+
+@code {
+    string errorMessage;
+    string temperature;
+    string selectedValue;
+    string temperatureResult;
+
+    private void ConvertTemperature()
+    {
+        if (string.IsNullOrEmpty(selectedValue) || selectedValue.ToUpper().StartsWith("FAHRENHEIT"))
+        {
+            ConvertFahrenheitToCelsius();
+        }
+        else
+        {
+            ConvertCelsiusToFahrenheit();
+        }
+    }
+
+    private void ConvertFahrenheitToCelsius()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(temperature))
+            {
+                temperature = "0";
+            }
+            double tempinF = Convert.ToDouble(temperature);
+            temperatureResult = ((tempinF - 32) * (5f / 9f)).ToString("0.##") + "℃";
+            errorMessage = string.Empty;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Cannot convert temperature from Fahrenheit to Celsius.";
+        }
+    }
+    private void ConvertCelsiusToFahrenheit()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(temperature))
+            {
+                temperature = "0";
+            }
+            double tempinC = Convert.ToDouble(temperature);
+            temperatureResult = (tempinC * (9f / 5f) + 32).ToString("0.##") + "℉";
+            errorMessage = string.Empty;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Cannot convert temperature from Celsius to Fahrenheit.";
+        }
+
+    }
+}
