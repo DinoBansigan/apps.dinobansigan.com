@@ -1,0 +1,51 @@
+﻿@page "/WriteAsArchivePageGenerator"
+@inject NavigationManager navManager
+
+<h1>Write.as Archive Page Generator</h1>
+<p>
+    This is a simple app that will generate the HTML contents needed to populate a static <a href="https://write.as/">Write.as</a> Archive page. All you have to do is enter your 
+    Write.as alias below and click the Generate button.
+</p>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">https://write.as/</span>
+    </div>
+    <input type="text" class="form-control" placeholder="Alias" aria-label="Alias" aria-describedby="basic-addon1" @bind-value="@alias" @onkeyup="@HandleEnterKey" />
+</div>
+
+<button type="button" class="btn btn-primary" @onclick="HandleGenerate">Generate</button>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3" role="alert">
+        @errorMessage
+    </div>
+}
+
+@code {
+    string alias;
+    string errorMessage;
+
+    private void HandleGenerate()
+    {
+        if (string.IsNullOrEmpty(alias))
+        {
+            errorMessage = "Please enter a Write.as alias before clicking the Generate button...";
+        }
+        else
+        {
+            var query = new Dictionary<string, string> { { "alias", alias } };
+            navManager.NavigateTo(QueryHelpers.AddQueryString(navManager.BaseUri + "WriteAsArchivePageGeneratorResults", query));
+        }
+    }
+
+    private void HandleEnterKey(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            HandleGenerate();
+        }
+    }
+
+}
