@@ -90,7 +90,7 @@ app {
             height: 3rem;
             display: flex;
             align-items: center;
-            line-height: 1.5rem;
+            line-height: 1rem;
         }
 
             .sidebar .nav-item a.active {
@@ -160,6 +160,10 @@ app {
         bottom: inherit;
         margin-top: 50px;
     }
+
+    .long-text-nav-link {
+        padding-left: 0.3rem !important;
+    }
 }
 
 @media (min-width: 768px) {
@@ -197,5 +201,9 @@ app {
         margin-top: 0px;
         position: absolute;
         bottom: 0;
+    }
+
+    .long-text-nav-link {
+        padding-left: 0.8rem!important;
     }
 }
