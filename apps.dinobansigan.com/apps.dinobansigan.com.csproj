@@ -18,4 +18,10 @@
     <PackageReference Include="WriteAs.NET" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\404.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
