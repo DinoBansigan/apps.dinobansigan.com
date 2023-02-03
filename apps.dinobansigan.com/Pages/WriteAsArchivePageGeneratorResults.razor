@@ -1,16 +1,16 @@
 ﻿@page "/WriteAsArchivePageGeneratorResults"
 @inject NavigationManager navManager2
-@using HeyRed.MarkdownSharp
-@using HtmlAgilityPack
-@using System.IO
+@inject HttpClient httpClient
+@using System.Text.Json
+@using apps.dinobansigan.com.Models
 
-@if (allPosts == null)
+@if (archivePageItems == null)
 {
     <SpinKitChasingDots />
 }
 else
 {
-    if (allPosts.Count == 0)
+    if (archivePageItems.Count == 0)
     {
         <div class="alert alert-warning" role="alert">
             Could not generate Archive page contents for https://write.as/<span class="font-weight-bold">@writeAsAlias</span>
@@ -27,18 +27,19 @@ else
         System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
         string currentYear = string.Empty;
         stringBuilder.AppendLine("<div class=\"archivePage\">");
-        @foreach (var post in allPosts)
+        @foreach (var post in archivePageItems)
         {
-            if (string.IsNullOrEmpty(currentYear) || post.CreateDate.Year.ToString() != currentYear)
+            DateTime localPublishDate = post.PublishDate.ToLocalTime();
+            if (string.IsNullOrEmpty(currentYear) || localPublishDate.Year.ToString() != currentYear)
             {
-                currentYear = post.CreateDate.Year.ToString();
+                currentYear = localPublishDate.Year.ToString();
                 stringBuilder.AppendLine("<h1>" + currentYear + "</h1>");
                 stringBuilder.AppendLine("<hr class=\"archivePageHr\"/>");
             }
 
-            string createDate = post.CreateDate.ToString("yyyy-MM-dd");
-            string postTitle = GetPostTitle(post);
-            string postUrl = domainName + post.Slug;
+            string createDate = localPublishDate.ToString("yyyy-MM-dd");
+            string postTitle = post.Title;
+            string postUrl = post.Url;
             stringBuilder.AppendLine(string.Format("<div><a href=\"{0}\" target=\"_blank\"><span class=\"archivePageDateSpan\">{1}:</span> {2}</a></div>", postUrl, createDate, postTitle));
         }
         stringBuilder.AppendLine("</div>");
@@ -62,7 +63,7 @@ else
 
 @code {
     string writeAsAlias { get; set; }
-    List<WriteAs.NET.Client.Models.Post> allPosts = null;
+    List<ArchivePageItem> archivePageItems = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,114 +77,27 @@ else
         {
             try
             {
-                using (var client = new WriteAs.NET.WriteAsClient("https://write.as/"))
+                string url = $"api/WriteAs/ArchivePageItems?alias={writeAsAlias}";
+                using HttpResponseMessage response = await httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
                 {
-                    allPosts = await client.GetAllPosts(writeAsAlias, WriteAs.NET.Shared.SortOrder.Descending);
-                }
+                    PropertyNameCaseInsensitive = true
+                };
+                var items = JsonSerializer.Deserialize<ArchivePageItem[]>(responseBody, options);
+                archivePageItems = items.ToList();
             }
             catch (Exception)
             {
-                allPosts = null;
+                archivePageItems = new List<ArchivePageItem>();
             }
         }
     }
 
     private void NavigateBackToArchivePageGenerator()
     {
+        archivePageItems = null;
         navManager2.NavigateTo("/WriteAsArchivePageGenerator");
-    }
-
-    private string GetPostTitle(WriteAs.NET.Client.Models.Post post)
-    {
-        string postTitle = string.Empty;
-        if (string.IsNullOrEmpty(post.Title))
-        {
-            postTitle = "Untitled Post";
-            string postContent = new Markdown().Transform(post.Body);
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(postContent);
-
-            using (StringWriter sw = new StringWriter())
-            {
-                ConvertTo(doc.DocumentNode, sw);
-                sw.Flush();
-                string plainText = sw.ToString();
-                if (!string.IsNullOrEmpty(plainText))
-                {
-                    plainText = plainText.Replace("\r", "");
-                    plainText = plainText.Replace("\n", "");
-                    int length = plainText.Length < 50 ? plainText.Length : 50;
-                    postTitle = plainText.Substring(0, length) + "...";
-                }
-            }
-        }
-        else
-        {
-            postTitle = post.Title;
-        }
-
-        postTitle = postTitle.Replace("#", "&#35;"); // this is to avoid triggering write.as' hashtag system
-        return postTitle;
-    }
-
-    private static void ConvertTo(HtmlNode node, TextWriter outText)
-    {
-        string html;
-        switch (node.NodeType)
-        {
-            case HtmlNodeType.Comment:
-                // don't output comments
-                break;
-
-            case HtmlNodeType.Document:
-                ConvertContentTo(node, outText);
-                break;
-
-            case HtmlNodeType.Text:
-                // script and style must not be output
-                string parentName = node.ParentNode.Name;
-                if ((parentName == "script") || (parentName == "style"))
-                    break;
-
-                // get text
-                html = ((HtmlTextNode)node).Text;
-
-                // is it in fact a special closing node output as text?
-                if (HtmlNode.IsOverlappedClosingElement(html))
-                    break;
-
-                // check the text is meaningful and not a bunch of whitespaces
-                if (html.Trim().Length > 0)
-                {
-                    outText.Write(HtmlEntity.DeEntitize(html));
-                }
-                break;
-
-            case HtmlNodeType.Element:
-                switch (node.Name)
-                {
-                    case "p":
-                        // treat paragraphs as crlf
-                        outText.Write("\r\n");
-                        break;
-                    case "br":
-                        outText.Write("\r\n");
-                        break;
-                }
-
-                if (node.HasChildNodes)
-                {
-                    ConvertContentTo(node, outText);
-                }
-                break;
-        }
-    }
-
-    private static void ConvertContentTo(HtmlNode node, TextWriter outText)
-    {
-        foreach (HtmlNode subnode in node.ChildNodes)
-        {
-            ConvertTo(subnode, outText);
-        }
     }
 }

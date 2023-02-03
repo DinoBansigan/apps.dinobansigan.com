@@ -17,7 +17,7 @@ namespace apps.dinobansigan.com
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri("https://dinobansigan-api.azurewebsites.net/") });
 
             await builder.Build().RunAsync();
         }

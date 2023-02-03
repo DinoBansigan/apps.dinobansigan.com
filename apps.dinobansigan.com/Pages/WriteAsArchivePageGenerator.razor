@@ -6,18 +6,15 @@
     This is a simple app that will generate the HTML contents needed to populate a static <a href="https://write.as/">Write.as</a> Archive page. All you have to do is enter your 
     Write.as alias below and click the Generate button.
 </p>
-<p style="color: red;">
-    Update 2022-12-31: Unfortunately due to CORS restrictions on the Write.as server, this Archive Page Generator no longer works.
-</p>
 
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" id="basic-addon1">https://write.as/</span>
     </div>
-    <input type="text" class="form-control" placeholder="Alias" aria-label="Alias" aria-describedby="basic-addon1" @bind-value="@alias" disabled />
+    <input type="text" class="form-control" placeholder="Alias" aria-label="Alias" aria-describedby="basic-addon1" @bind-value="@alias" @onkeyup="@HandleEnterKey" />
 </div>
 
-<button type="button" class="btn btn-primary" disabled>Generate</button> 
+<button type="button" class="btn btn-primary" @onclick="HandleGenerate">Generate</button> 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div class="alert alert-danger mt-3" role="alert">
